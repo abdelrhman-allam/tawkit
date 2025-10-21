@@ -29,8 +29,24 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Deploy to GitHub Pages
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is configured for static export and GitHub Pages.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Static export is enabled in `next.config.ts` (`output: "export"`, `trailingSlash: true`, `images.unoptimized: true`).
+- A workflow at `.github/workflows/pages.yml` builds and deploys to Pages on pushes to `main`.
+- The GitHub Pages base path is set to the repository name (e.g., `/REPO_NAME`) via `NEXT_PUBLIC_BASE_PATH` in the workflow.
+
+### Usage
+1. Push to `main`.
+2. In your repo settings → Pages, set source to "GitHub Actions".
+3. Access the site at `https://<username>.github.io/<repo>/`.
+
+### User/Org site (root) instead of repo subpath
+If you’re deploying to `https://<username>.github.io/` (no repo path), edit `.github/workflows/pages.yml` and set:
+
+```yaml
+NEXT_PUBLIC_BASE_PATH: ""
+```
+
+Or remove the line entirely. This makes `basePath` empty.
