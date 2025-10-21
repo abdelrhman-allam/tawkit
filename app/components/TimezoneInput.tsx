@@ -1,19 +1,20 @@
 "use client";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 
 export default function TimezoneInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [mounted, setMounted] = useState(false);
-  const [localZone, setLocalZone] = useState<string>("UTC");
+  const initializedRef = useRef(false);
   
   useEffect(() => {
     setMounted(true);
+    if (initializedRef.current) return;
+    initializedRef.current = true;
     try {
       const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      if (tz) setLocalZone(tz);
       // If the current value is empty, default to local
-      if (!value) onChange(tz);
+      if (!value && tz) onChange(tz);
     } catch {}
-  }, []);
+  }, [onChange, value]);
 
   const zones = useMemo(() => {
     // Always use fallback list to ensure consistency between server and client
@@ -35,9 +36,11 @@ export default function TimezoneInput({ value, onChange }: { value: string; onCh
     if (!mounted) return fallbackZones;
 
     // Only try to get full list on client after mount
-    if (typeof Intl !== "undefined" && (Intl as any).supportedValuesOf) {
+    type IntlWithSupported = typeof Intl & { supportedValuesOf?: (key: string) => string[] };
+    const intlObj: IntlWithSupported = Intl as IntlWithSupported;
+    if (typeof intlObj !== "undefined" && typeof intlObj.supportedValuesOf === "function") {
       try {
-        return (Intl as any).supportedValuesOf("timeZone") as string[];
+        return intlObj.supportedValuesOf("timeZone") as string[];
       } catch {}
     }
     return fallbackZones;

@@ -10,6 +10,7 @@ import Footer from "./Footer";
 import { useEffect } from "react";
 import { useMeetingStore } from "@/app/lib/store";
 import type { MeetingState } from "@/app/lib/url";
+import { decodeState } from "@/app/lib/url";
 
 export default function HomeClient({ initialState }: { initialState: MeetingState | null }) {
   const { baseUTC, setBaseUTC, setDuration, setParticipants } = useMeetingStore();
@@ -20,10 +21,19 @@ export default function HomeClient({ initialState }: { initialState: MeetingStat
       setBaseUTC(initialState.t);
       setDuration(initialState.dur);
       setParticipants(initialState.participants);
-    } else if (baseUTC === "2025-01-01T12:00:00.000Z") {
-      // Update to current time + 1 hour only if still using static default
-      const dynamicDefault = new Date(Date.now() + 60 * 60 * 1000).toISOString();
-      setBaseUTC(dynamicDefault);
+    } else {
+      // Attempt client-side decode from current URL
+      const usp = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : undefined;
+      const decoded = usp ? decodeState(usp) : null;
+      if (decoded) {
+        setBaseUTC(decoded.t);
+        setDuration(decoded.dur);
+        setParticipants(decoded.participants);
+      } else if (baseUTC === "2025-01-01T12:00:00.000Z") {
+        // Update to current time + 1 hour only if still using static default
+        const dynamicDefault = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+        setBaseUTC(dynamicDefault);
+      }
     }
   }, [initialState, baseUTC, setBaseUTC, setDuration, setParticipants]);
 
