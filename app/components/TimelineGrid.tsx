@@ -23,14 +23,14 @@ export default function TimelineGrid() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
-              className="border border-black/10 dark:border-white/10 rounded-md"
+              className="border border-black/10 dark:border-white/10 rounded-md bg-background/30 backdrop-blur-sm"
             >
               <div className="flex items-center justify-between px-3 py-2">
                 <div className="text-sm font-medium">{p.name}</div>
                 <div className="text-xs opacity-70">{p.zone}</div>
               </div>
               <div
-                className="grid gap-[1px] bg-black/10 dark:bg-white/10 p-[1px]"
+                className="grid gap-[1px] bg-black/10 dark:bg-white/10 p-[1px] rounded-md"
                 style={{ gridTemplateColumns: "repeat(24, minmax(0, 1fr))" }}
               >
                 {hours.map((h) => (

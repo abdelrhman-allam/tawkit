@@ -4,6 +4,7 @@ import MeetingForm from "./MeetingForm";
 import ParticipantList from "./ParticipantList";
 import TimelineGrid from "./TimelineGrid";
 import OverlapBar from "./OverlapBar";
+import WorldMap from "./WorldMap";
 import ShareLink from "./ShareLink";
 import Footer from "./Footer";
 import { useEffect } from "react";
@@ -37,6 +38,7 @@ export default function HomeClient({ initialState }: { initialState: MeetingStat
         </div>
         <div className="space-y-6">
           <OverlapBar />
+          <WorldMap />
           <TimelineGrid />
         </div>
       </div>
