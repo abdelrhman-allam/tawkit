@@ -1,0 +1,19 @@
+/app
+  page.tsx
+  /components
+    Navbar.tsx
+    MeetingForm.tsx
+    TimezoneInput.tsx
+    ParticipantList.tsx
+    TimelineGrid.tsx
+    OverlapBar.tsx
+    ShareLink.tsx
+    Footer.tsx
+  /lib
+    time.ts
+    url.ts
+  /styles
+    globals.css
+/public
+  favicon.ico
+  og-image.png
