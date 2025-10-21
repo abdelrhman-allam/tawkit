@@ -58,7 +58,8 @@ export default function MeetingForm() {
       },
       { zone: localZone }
     ).toUTC();
-    setBaseUTC(combined.toISO());
+    const iso = combined.toISO();
+    if (iso) setBaseUTC(iso);
   }
 
   function addCurrentParticipant() {

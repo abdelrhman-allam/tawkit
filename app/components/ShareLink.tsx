@@ -10,7 +10,9 @@ export default function ShareLink() {
   const link = useMemo(() => {
     const qs = encodeState({ t: baseUTC, dur: duration, participants });
     const origin = typeof window !== "undefined" ? window.location.origin : "";
-    return `${origin}/${qs}`;
+    const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+    const pathPrefix = basePath ? `${basePath}` : "";
+    return `${origin}${pathPrefix}/${qs}`;
   }, [baseUTC, duration, participants]);
 
   useEffect(() => {
