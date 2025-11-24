@@ -82,50 +82,122 @@ export default function MeetingForm() {
         Meeting Details
       </h2>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium block">Date</label>
-        <DatePicker
-          selected={dateObj}
-          onChange={(d: Date | null) => {
-            setDateObj(d);
-            updateBaseFromParts(d, null);
-          }}
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select date"
-          className="w-full rounded-lg border border-black/10 dark:border-white/10 px-4 py-2.5 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-          calendarStartDay={1}
-        />
+      {/* Date & Time Section */}
+      <div className="space-y-4 p-4 rounded-lg bg-gradient-to-r from-blue-500/5 to-purple-500/5 border border-black/5 dark:border-white/5">
+        <div className="space-y-2">
+          <label className="text-sm font-medium block">Date</label>
+          <DatePicker
+            selected={dateObj}
+            onChange={(d: Date | null) => {
+              setDateObj(d);
+              updateBaseFromParts(d, null);
+            }}
+            dateFormat="yyyy-MM-dd"
+            placeholderText="Select date"
+            className="w-full rounded-lg border border-black/10 dark:border-white/10 px-4 py-2.5 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            calendarStartDay={1}
+          />
+
+          {/* Quick Select Buttons */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                const today = new Date();
+                setDateObj(today);
+                updateBaseFromParts(today, null);
+              }}
+              className="px-3 py-1.5 text-xs rounded-md bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-colors duration-200"
+            >
+              Today
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                setDateObj(tomorrow);
+                updateBaseFromParts(tomorrow, null);
+              }}
+              className="px-3 py-1.5 text-xs rounded-md bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-colors duration-200"
+            >
+              Tomorrow
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const nextWeek = new Date();
+                nextWeek.setDate(nextWeek.getDate() + 7);
+                setDateObj(nextWeek);
+                updateBaseFromParts(nextWeek, null);
+              }}
+              className="px-3 py-1.5 text-xs rounded-md bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 transition-colors duration-200"
+            >
+              Next Week
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium block">Time</label>
+          <DatePicker
+            selected={timeObj}
+            onChange={(t: Date | null) => {
+              setTimeObj(t);
+              updateBaseFromParts(null, t);
+            }}
+            showTimeSelect
+            showTimeSelectOnly
+            timeIntervals={15}
+            timeCaption="Time"
+            dateFormat="HH:mm"
+            placeholderText="Select time"
+            className="w-full rounded-lg border border-black/10 dark:border-white/10 px-4 py-2.5 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+          />
+          <div className="flex items-center gap-2 text-xs opacity-60 mt-1.5">
+            <span className="font-mono">UTC: {baseUTC}</span>
+            <span>•</span>
+            <span>Your timezone: {localZone}</span>
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium block">Time</label>
-        <DatePicker
-          selected={timeObj}
-          onChange={(t: Date | null) => {
-            setTimeObj(t);
-            updateBaseFromParts(null, t);
-          }}
-          showTimeSelect
-          showTimeSelectOnly
-          timeIntervals={15}
-          timeCaption="Time"
-          dateFormat="HH:mm"
-          placeholderText="Select time"
-          className="w-full rounded-lg border border-black/10 dark:border-white/10 px-4 py-2.5 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-        />
-        <p className="text-xs opacity-60 mt-1.5 font-mono">UTC: {baseUTC}</p>
-      </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium block">Duration (minutes)</label>
-        <input
-          type="number"
-          min={15}
-          step={15}
-          value={duration}
-          onChange={(e) => setDuration(parseInt(e.target.value, 10) || 60)}
-          className="w-full rounded-lg border border-black/10 dark:border-white/10 px-4 py-2.5 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-        />
+      {/* Duration Section */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium block">Duration</label>
+
+        {/* Quick Select Duration Buttons */}
+        <div className="grid grid-cols-4 gap-2">
+          {[15, 30, 45, 60].map((mins) => (
+            <button
+              key={mins}
+              type="button"
+              onClick={() => setDuration(mins)}
+              className={`px-3 py-2 text-sm rounded-lg border transition-all duration-200 ${duration === mins
+                  ? "bg-blue-500 text-white border-blue-500 shadow-md"
+                  : "bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/20"
+                }`}
+            >
+              {mins} min
+            </button>
+          ))}
+        </div>
+
+        {/* Custom Duration Input */}
+        <div className="flex items-center gap-2">
+          <span className="text-xs opacity-60">Custom:</span>
+          <input
+            type="number"
+            min={5}
+            step={5}
+            value={duration}
+            onChange={(e) => setDuration(parseInt(e.target.value, 10) || 60)}
+            className="flex-1 rounded-lg border border-black/10 dark:border-white/10 px-3 py-2 text-sm bg-background/50 backdrop-blur-sm transition-all duration-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            placeholder="Enter minutes"
+          />
+          <span className="text-xs opacity-60">minutes</span>
+        </div>
       </div>
 
       <div className="pt-4 border-t border-black/10 dark:border-white/10 space-y-3">
