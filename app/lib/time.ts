@@ -24,6 +24,7 @@ export function buildDayHours(baseUTC: string, zone: string) {
     return {
       index: i,
       label: local.toFormat("HH"),
+      localTime: local.toFormat("HH:mm"),
       status: getHourStatus(hour) as HourStatus,
       dateTime: local,
     };

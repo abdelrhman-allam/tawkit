@@ -1,31 +1,52 @@
 "use client";
 import { useMeetingStore } from "@/app/lib/store";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ParticipantList() {
   const { participants, removeParticipant } = useMeetingStore();
 
   return (
-    <div className="space-y-2">
-      <h3 className="text-sm font-semibold">Participants</h3>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.05 }}
+      className="glass rounded-xl p-6 space-y-4 hover-lift"
+    >
+      <h3 className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        Participants
+      </h3>
       {participants.length === 0 && (
-        <p className="text-xs opacity-70">No participants yet. Add some below.</p>
+        <p className="text-sm opacity-60 text-center py-4">
+          No participants yet. Add some above.
+        </p>
       )}
-      <ul className="space-y-2">
-        {participants.map((p, idx) => (
-          <li key={`${p.name}-${idx}`} className="flex items-center justify-between border border-black/10 dark:border-white/10 rounded-md px-3 py-2">
-            <div>
-              <div className="text-sm font-medium">{p.name}</div>
-              <div className="text-xs opacity-70">{p.zone}</div>
-            </div>
-            <button
-              className="text-xs rounded-md px-2 py-1 border border-rose-400 text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20"
-              onClick={() => removeParticipant(idx)}
+      <ul className="space-y-3">
+        <AnimatePresence mode="popLayout">
+          {participants.map((p, idx) => (
+            <motion.li
+              key={`${p.name}-${idx}`}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center justify-between border border-black/10 dark:border-white/10 rounded-lg px-4 py-3 bg-gradient-to-r from-blue-500/5 to-purple-500/5 hover-lift"
             >
-              Remove
-            </button>
-          </li>
-        ))}
+              <div>
+                <div className="text-sm font-medium">{p.name}</div>
+                <div className="text-xs opacity-70 font-mono">{p.zone}</div>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="text-xs rounded-lg px-3 py-1.5 border border-rose-400 text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors duration-200 font-medium"
+                onClick={() => removeParticipant(idx)}
+              >
+                Remove
+              </motion.button>
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
-    </div>
+    </motion.div>
   );
 }
